@@ -1,0 +1,98 @@
+
+
+
+
+========================================================================
+             MATHEMATICAL FORMULAS USED IN THE PROJECT
+========================================================================
+
+1. DATA PREPROCESSING
+------------------------------------------------------------------------
+Before feeding images into the Deep Learning models, we normalize the 
+pixel values using the ImageNet standards.
+
+Formula: Standardization (Z-score Normalization)
+   X_norm = (X - μ) / σ
+
+   Where:
+   - X  : Original pixel value (0-255 scaled to 0-1)
+   - μ  : Mean ([0.485, 0.456, 0.406] for RGB channels)
+   - σ  : Standard Deviation ([0.229, 0.224, 0.225] for RGB channels)
+
+2. MODEL ACTIVATION FUNCTION
+------------------------------------------------------------------------
+Since this is a Multi-Label Classification problem (a patient can have 
+multiple diseases simultaneously), we use the Sigmoid function at the 
+final layer instead of Softmax.
+
+Formula: Sigmoid Activation
+   σ(z) = 1 / (1 + e^(-z))
+
+   Where:
+   - z  : The raw output (logit) from the neural network.
+   - σ(z): Probability score between 0 and 1.
+
+3. LOSS FUNCTION
+------------------------------------------------------------------------
+We calculate the error using Binary Cross-Entropy (BCE) Loss, averaged 
+over all 14 disease classes.
+
+Formula: Binary Cross-Entropy Loss
+   L = - (1/N) * Σ [ y_i * log(p_i) + (1 - y_i) * log(1 - p_i) ]
+
+   Where:
+   - N   : Number of classes (14).
+   - y_i : Actual label (1 for disease, 0 for normal).
+   - p_i : Predicted probability from the model.
+
+4. EVALUATION METRICS
+------------------------------------------------------------------------
+A. Accuracy (Global)
+   Calculates the percentage of correct predictions across all samples.
+   
+   Accuracy = (TP + TN) / (TP + TN + FP + FN)
+
+B. Precision (Positive Predictive Value)
+   How many of the predicted positive cases were actually positive?
+   
+   Precision = TP / (TP + FP)
+
+C. Recall (Sensitivity) - *Critical for Medical AI*
+   How many actual disease cases did the model correctly identify?
+   
+   Recall = TP / (TP + FN)
+
+D. F1-Score
+   Harmonic mean of Precision and Recall.
+   
+   F1 = 2 * (Precision * Recall) / (Precision + Recall)
+
+   Where:
+   - TP : True Positive (Correctly detected disease)
+   - TN : True Negative (Correctly detected normal)
+   - FP : False Positive (False Alarm)
+   - FN : False Negative (Missed Diagnosis)
+
+5. ENSEMBLE STRATEGY
+------------------------------------------------------------------------
+To improve reliability, we combine predictions from 3 models (DenseNet, 
+ResNet, SE-ResNeXt) using Average Voting.
+
+Formula: Ensemble Prediction
+   P_final = (P_DenseNet + P_ResNet + P_SEResNeXt) / 3
+
+   Where P_x is the probability vector output by model x.
+
+6. GATEKEEPER LOGIC (Safety Check)
+------------------------------------------------------------------------
+A. Histogram Analysis (Dark Pixel Ratio)
+   Used to filter out non-X-ray images (like trees/cars).
+   
+   Ratio = (Count of pixels < Threshold) / Total Pixels
+
+B. Edge Density (Texture Analysis)
+   Used to detect high-frequency noise (e.g., leaves in a tree image).
+   
+   Edge_Score = Mean( Sobel_Filter(Image) )
+
+========================================================================

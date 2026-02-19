@@ -1,0 +1,10 @@
+Report mein aap isse "Limitations" mein daal sakte hain ki 
+"Highly sharp or high-contrast X-rays might sometimes be misclassified by the safety module 
+due to texture similarity with non-medical images."
+
+
+3: Normal/Safe. (Model didn't find anything).
+
+2: Ambiguous/Suspicious. (Model found something, but Logic says "Kuch gadbad hai").
+
+1: Confirmed Disease. (Model and Logic both agree).

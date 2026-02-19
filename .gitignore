@@ -1,0 +1,6 @@
+data/
+new_output/
+new_data/
+level2/
+__pycache__/
+*.pth
